@@ -26,7 +26,7 @@ int main(int argc, const char * argv[])
     pid=fork();
     //child
     if (pid==0) {
-        execl("child.exe",name,buff);
+        execl("child.exe","child.exe",name,buff,NULL);
         exit(0);
     }
     //parent
