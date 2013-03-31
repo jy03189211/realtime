@@ -14,7 +14,7 @@
 
 int main(int argc, const char * argv[])
 {
-    int r; 
+    int r;
     pid_t pid;
     int fd;
     char chr;
@@ -39,4 +39,4 @@ int main(int argc, const char * argv[])
     while (read(fd,&chr,1)!=0)
        printf("%c",chr);
     return 0;
-} 
+}
