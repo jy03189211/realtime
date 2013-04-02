@@ -15,7 +15,7 @@
 int main(int argc, const char * argv[])
 {
 
-    pid_t pid;
+    pid_t pid,test;
     int fd;
     char chr;
     long r;
@@ -31,11 +31,12 @@ int main(int argc, const char * argv[])
     }
     //parent
     //in lecture sample code it is said ">0", a bit missunderstand
-    while (waitpid(-1, NULL, WNOHANG|WUNTRACED)==0) {
+    while ((test=waitpid(-1, NULL, WNOHANG))==0) {
         printf("Parent is working\n");
         sleep(1);
     }
-    printf("Child terminated\n");
+
+    printf("Child terminated %d\n",test);
 // why do I have to open it ag?
     lseek(fd,0,SEEK_SET);
     while ((r=read(fd,&chr,1))!=0){
