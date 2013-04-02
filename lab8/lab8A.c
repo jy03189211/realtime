@@ -44,6 +44,7 @@ int main(int argc, const char * argv[])
     while(stop){
         test=waitpid(-1,NULL,WNOHANG);
         if(test>0)
+
           break;
     }
 
