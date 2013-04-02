@@ -36,18 +36,14 @@ int main(int argc, const char * argv[])
     }
     //parent
     //in lecture sample code it is said ">0", a bit missunderstand
-    while(!stop){
+    while(1){
         //wait(NULL);
         printf("Parent is working\n");
         sleep(1);
-    }
-    while(stop){
         test=waitpid(-1,NULL,WNOHANG);
-        if(test>0)
-
+        if(stop)
           break;
     }
-
     printf("child pid is %d\n",test);
     lseek(fd,0,SEEK_SET);
     while (read(fd,&chr,1)!=0)
