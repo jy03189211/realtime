@@ -6,7 +6,7 @@
 #include <signal.h>
 
 void sig_handler(int sig_no);
-static volatile sig_atomic_t  sigflag;
+static volatile sig_atomic_t sigflag;
 int main(void) {
   pid_t child ;
   sigset_t newmask, oldmask, zeromask;
@@ -29,6 +29,8 @@ int main(void) {
           printf("sigsuspend error");
       }
       sigflag=0;
+      if(sigprocmask(SIG_SETMASK,&oldmask,NULL)<0)
+        printf("SIG_SETMASK error");
     }
     exit(0); 
   }
@@ -40,9 +42,14 @@ int main(void) {
         printf("sigsuspend error");
     }
     sigflag=0;
+    if(sigprocmask(SIG_SETMASK,&oldmask,NULL)<0)
+      printf("SIG_SETMASK error");
   }
   exit(0);
 }
 void sig_handler(int sig_no) {
-  sigflag=1;
+  if (sig_no==SIGUSR1)
+  {
+    sigflag=1;
+  }
 }
