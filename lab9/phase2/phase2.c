@@ -24,26 +24,33 @@ int main(void) {
     while( 1 ) {
       write(1, "1", 1);
       kill(getppid(), SIGUSR1);
+      //while loop is not necessary in this case. It's for the case
+      //that there exsits other signals
       while(sigflag==0){
         if(sigsuspend(&zeromask)!=-1)
           printf("sigsuspend error");
       }
       sigflag=0;
-      if(sigprocmask(SIG_SETMASK,&oldmask,NULL)<0)
-        printf("SIG_SETMASK error");
+      //must not use the following code, since it makes the mask unblock again with the 
+      //condition that the block function begins before the while loop
+      /* if(sigprocmask(SIG_SETMASK,&oldmask,NULL)<0) */
+      /*   printf("SIG_SETMASK error"); */
     }
     exit(0); 
   }
+
   while( 1 )  {
     write(1, "2" , 1);
     kill(child, SIGUSR1);
+    //while loop is not necessary in this case. It's for the case
+    //that there exsits other signals
     while(sigflag==0){
       if(sigsuspend(&zeromask)!=-1)
         printf("sigsuspend error");
     }
     sigflag=0;
-    if(sigprocmask(SIG_SETMASK,&oldmask,NULL)<0)
-      printf("SIG_SETMASK error");
+    /* if(sigprocmask(SIG_SETMASK,&oldmask,NULL)<0) */
+      /* printf("SIG_SETMASK error"); */
   }
   exit(0);
 }
