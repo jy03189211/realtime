@@ -24,7 +24,7 @@ int main(void) {
     
     pid_t child;
     int result, i, j;
-    int keyboard=0;
+
     
     //set up the AIO request
     aio_keyboard.aio_fildes = STDIN_FILENO;
@@ -65,20 +65,19 @@ int main(void) {
     }
     //initiate io
    aio_read(&aio_keyboard);
-   while ( chr_own != 'q' && chr_own != 'Q' ) {
-        
-        aio_read(&aio_fellow);
 
-        //wait for io completion
-        while ( aio_error(&aio_fellow) == EINPROGRESS);
-        //end of file
-        ret=aio_return(&aio_fellow);
+   aio_read(&aio_fellow);
+   //wait for io completion
+   while ( aio_error(&aio_fellow) == EINPROGRESS);
+    //end of file
+   ret=aio_return(&aio_fellow);
+   while ( chr_own != 'q' && chr_own != 'Q' ) {
+       
         if (ret==0){
             printf("\n");
             break;
         } 
-            
-
+         
     }
 
    sigaction(SIGRTMAX, &oldact, NULL);
@@ -88,17 +87,23 @@ int main(void) {
 void sig_handler(int sig_no,siginfo_t *info,void *dummy) {
     if (info->si_value.sival_int==KEYBOARD)
     {   
-        aio_read(&aio_keyboard);
-
         write(1,&chr_own,1);
+        aio_read(&aio_keyboard);
+      
     }
     if (info->si_value.sival_int==FELLOW)
     {   
-
-        if(ret>0){
-            //there would be an unexpected 'z' appearing randomly?????????????
+      
+         if(ret==1)
             write(1,&chr_fellow,1);
-        }
-        
+          else
+           _exit(0);
+          
+        aio_read(&aio_fellow);
+        //wait for io completion
+        while ( aio_error(&aio_fellow) == EINPROGRESS);
+        //end of file
+        ret=aio_return(&aio_fellow);
+        // printf("%d\n", ret);
     }
 }
